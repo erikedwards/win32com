@@ -1,6 +1,7 @@
 import win32com.client
 
 a = win32com.client.Dispatch('catia.application')
+# a = win32com.client.gencache.EnsureDispatch('catia.application')
 
 doc = a.ActiveDocument.Product
 

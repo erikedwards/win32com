@@ -25,5 +25,5 @@ for moniker in monikers:
     print(moniker.IsSystemMoniker())
 
 # now use win32com to see what you can do with the com objects on the list
-ThisApplication = win32com.client.gencache.EnsureDispatch('{000209FE-0000-0000-C000-000000000046}')
-help(ThisApplication)
+# ThisApplication = win32com.client.gencache.EnsureDispatch('{}')
+# help(ThisApplication)

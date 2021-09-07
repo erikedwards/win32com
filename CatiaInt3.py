@@ -2,14 +2,14 @@ import win32com.client
 import math
 
 # Constants
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 500
+SCREEN_WIDTH = 5000
+SCREEN_HEIGHT = 1000
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 
 # init visualization values
 circX = int(SCREEN_WIDTH / 6)
 circY = int(SCREEN_HEIGHT / 2)
-circScale = 150
+circScale = 250
 wave = []
 # waveX = int(SCREEN_WIDTH * (2/4))
 waveX = circX
@@ -38,6 +38,21 @@ maxN = 1
 # set frame rate
 FR = 60
 
+
+# --- draw axis system
+rad = int(circScale * (4 / (1 * math.pi)))
+pointYPos = hsf.AddNewPointCoord(waveX, circY + rad, 0)
+pointYNeg = hsf.AddNewPointCoord(waveX, circY - rad, 0)
+pointXNeg = hsf.AddNewPointCoord(waveX - 50, circY, 0)
+pointXPos = hsf.AddNewPointCoord(SCREEN_WIDTH, circY, 0)
+xAxisLine = hsf.AddNewLinePtPt(pyPart.CreateReferenceFromObject(pointXNeg),
+                               pyPart.CreateReferenceFromObject(pointXPos))
+yAxisLine = hsf.AddNewLinePtPt(pyPart.CreateReferenceFromObject(pointYNeg),
+                               pyPart.CreateReferenceFromObject(pointYPos))
+hb1.AppendHybridShape(xAxisLine)
+hb1.AppendHybridShape(yAxisLine)
+pyPart.Update()
+
 # Main Loop
 run = True
 
@@ -45,12 +60,6 @@ while run:
 
     # Game logic
     time += timeStep
-
-    # --- draw wave CS
-    rad = int(circScale * (4 / (1 * math.pi)))
-    # pygame.draw.line(screen, BLACK, [waveX, circY - rad], [waveX, circY + rad])
-    # pygame.draw.line(screen, BLACK, [waveX - 50, circY], [SCREEN_WIDTH, circY])
-    #TODO --- add lines to Catia geoset "geom_drawAxis"
 
     x = circX
     y = circY
@@ -63,7 +72,9 @@ while run:
         # --- draw circle
         # pygame.draw.circle(screen, BLACK, [prevX, prevY], rad, 1)
         # pygame.draw.line(screen, RED, [prevX, prevY], [x, y])
-        #TODO --- add circle and line to Catia geoset "geom_circularMotion"
+        #TODO --- add circle and line to Catia geoset "geom_circularMotion".
+
+
 
     # Add y value of smallest circle to wave
     wave.insert(0, y)

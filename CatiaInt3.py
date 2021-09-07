@@ -1,22 +1,6 @@
 import win32com.client
 import math
 
-# Constants
-SCREEN_WIDTH = 5000
-SCREEN_HEIGHT = 1000
-size = (SCREEN_WIDTH, SCREEN_HEIGHT)
-
-# init visualization values
-circX = int(SCREEN_WIDTH / 6)
-circY = int(SCREEN_HEIGHT / 2)
-circScale = 250
-wave = []
-# waveX = int(SCREEN_WIDTH * (2/4))
-waveX = circX
-# waveY = int(SCREEN_HEIGHT / 2)
-time = 0.00
-timeStep = 0.005
-
 # init Catia
 catapp = win32com.client.Dispatch("CATIA.Application")
 rootProd = catapp.ActiveDocument.Product
@@ -35,16 +19,31 @@ hsf = pyPart.HybridShapeFactory
 # num terms = (1/2)*(maxN + 1)
 maxN = 1
 
-# set frame rate
-FR = 60
+# Constants
+SCREEN_WIDTH = 5000
+SCREEN_HEIGHT = 1000
+size = (SCREEN_WIDTH, SCREEN_HEIGHT)
+FR = 60     # Frame Rate
+
+# init visualization values
+circX = 0
+circY = 0
+circScale = 250
+rad = int(circScale * (4 / (1 * math.pi)))
+wave = []
+waveX = circX
+waveY = 0
+time = 0.000
+timeStep = 1.000    # 0.005
 
 
 # --- draw axis system
-rad = int(circScale * (4 / (1 * math.pi)))
-pointYPos = hsf.AddNewPointCoord(waveX, circY + rad, 0)
-pointYNeg = hsf.AddNewPointCoord(waveX, circY - rad, 0)
-pointXNeg = hsf.AddNewPointCoord(waveX - 50, circY, 0)
-pointXPos = hsf.AddNewPointCoord(SCREEN_WIDTH, circY, 0)
+pointOrigin = hsf.AddNewPointCoord(0, 0, 0)
+pointYPos = hsf.AddNewPointCoord(circX, circY + SCREEN_HEIGHT/2, 0)
+pointYNeg = hsf.AddNewPointCoord(circX, circY - SCREEN_HEIGHT/2, 0)
+pointXNeg = hsf.AddNewPointCoord(circX - SCREEN_WIDTH, circY, 0)
+pointXPos = hsf.AddNewPointCoord(circX + rad, circY, 0)
+
 xAxisLine = hsf.AddNewLinePtPt(pyPart.CreateReferenceFromObject(pointXNeg),
                                pyPart.CreateReferenceFromObject(pointXPos))
 yAxisLine = hsf.AddNewLinePtPt(pyPart.CreateReferenceFromObject(pointYNeg),
@@ -73,8 +72,21 @@ while run:
         # pygame.draw.circle(screen, BLACK, [prevX, prevY], rad, 1)
         # pygame.draw.line(screen, RED, [prevX, prevY], [x, y])
         #TODO --- add circle and line to Catia geoset "geom_circularMotion".
+        circle = hsf.AddNewCircleCtrRad(
+            pyPart.CreateReferenceFromObject(pointOrigin),
+            pyPart.CreateReferenceFromObject(pyPart.OriginElements.PlaneXY),
+            False,
+            rad)
 
+        startPoint = hsf.AddNewPointCoord(prevX, prevY, 0)
+        endPoint = hsf.AddNewPointCoord(x, y, 0)
+        line = hsf.AddNewLinePtPt(pyPart.CreateReferenceFromObject(startPoint),
+                                  pyPart.CreateReferenceFromObject(endPoint))
 
+        hb1.AppendHybridShape(circle)
+        # hb1.AppendHybridShape(startPoint)
+        # hb1.AppendHybridShape(endPoint)
+        hb1.AppendHybridShape(line)
 
     # Add y value of smallest circle to wave
     wave.insert(0, y)
@@ -86,8 +98,8 @@ while run:
         pX = int(waveX + i)
         pY = int(wave[i])
         # pygame.draw.circle(screen, GREEN, [pX, pY], 1)
-        #TODO --- add point to Catia geoset "geom_linearMotion-Sin(theta)"
-        hb1.AppendHybridShape(hsf.AddNewPointCoord(pX, pY, 0))
+        # TODO --- add point to Catia geoset "geom_linearMotion-Sin(theta)"
+        # hb1.AppendHybridShape(hsf.AddNewPointCoord(pX, pY, 0))
 
     pyPart.Update()
 
@@ -106,12 +118,12 @@ while run:
 # ----------------------------------------------------------------
 # ----------------------------------------------------------------
 
-
-for i in range(10):
-    point = hsf.AddNewPointCoord(i*10, 0.0, 0.0)
-    hb1.AppendHybridShape(point)
-    # pyPart.InWorkObject = point
-    # pyPart.Update()
-pyPart.Update()
+#
+# for i in range(10):
+#     point = hsf.AddNewPointCoord(i*10, 0.0, 0.0)
+#     hb1.AppendHybridShape(point)
+#     # pyPart.InWorkObject = point
+#     # pyPart.Update()
+# pyPart.Update()
 
 

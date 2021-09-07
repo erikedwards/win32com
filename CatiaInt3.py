@@ -17,7 +17,7 @@ hsf = pyPart.HybridShapeFactory
 # maxN = 5, terms = 1, 3, and 5. Num terms = 3
 # maxN = 11, terms = 1, 3, 5, 7, 9, 11. Num terms = 6
 # num terms = (1/2)*(maxN + 1)
-maxN = 51
+maxN = 11
 
 # Constants
 SCREEN_WIDTH = 5000
@@ -34,7 +34,7 @@ wave = []
 waveX = circX
 waveY = 0
 time = 0.000
-timeStep = 0.050    # 0.005
+timeStep = 0.90    # 0.005
 
 
 # --- draw axis system

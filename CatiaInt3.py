@@ -17,7 +17,7 @@ hsf = pyPart.HybridShapeFactory
 # maxN = 5, terms = 1, 3, and 5. Num terms = 3
 # maxN = 11, terms = 1, 3, 5, 7, 9, 11. Num terms = 6
 # num terms = (1/2)*(maxN + 1)
-maxN = 1
+maxN = 51
 
 # Constants
 SCREEN_WIDTH = 5000
@@ -34,7 +34,7 @@ wave = []
 waveX = circX
 waveY = 0
 time = 0.000
-timeStep = 1.000    # 0.005
+timeStep = 0.050    # 0.005
 
 
 # --- draw axis system
@@ -72,8 +72,9 @@ while run:
         # pygame.draw.circle(screen, BLACK, [prevX, prevY], rad, 1)
         # pygame.draw.line(screen, RED, [prevX, prevY], [x, y])
         #TODO --- add circle and line to Catia geoset "geom_circularMotion".
+        tempPoint = hsf.AddNewPointCoord(prevX, prevY, 0)
         circle = hsf.AddNewCircleCtrRad(
-            pyPart.CreateReferenceFromObject(pointOrigin),
+            pyPart.CreateReferenceFromObject(tempPoint),
             pyPart.CreateReferenceFromObject(pyPart.OriginElements.PlaneXY),
             False,
             rad)
